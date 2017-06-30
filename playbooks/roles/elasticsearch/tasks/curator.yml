@@ -1,0 +1,27 @@
+---
+- name: Install pip packages
+  pip: name=elasticsearch-curator
+
+- name: Install elastic curator crontab
+  cron:
+    cron_file=curator
+    minute=05
+    hour=05
+    job="/usr/local/bin/curator --host {{ elastic_bindip }} delete indices --older-than
+         {{ curator_max_keep_days | default(90) }} --time-unit days
+         --timestring \"\%Y.\%m.\%d\" >/dev/null 2>&1"
+    user="root"
+    name="curator"
+  when: curator_max_keep_days is defined
+
+- name: Install elastic curator edgecast crontab
+  cron:
+    cron_file=curator-ec
+    minute=10
+    hour=05
+    job="/usr/local/bin/curator --host {{ elastic_bindip }} delete indices --exclude
+         logstash-20 --older-than {{ curator_edgecast_max_keep_days | default(1) }}
+         --time-unit days --timestring \"\%Y.\%m.\%d\" >/dev/null 2>&1"
+    user="root"
+    name="curator"
+  when: curator_edgecast_max_keep_days is defined

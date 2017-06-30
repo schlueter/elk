@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Hunter Modes
+  description: Install and configure Elasticsearch
+  company: Refinery29
+  license: MIT
+  min_ansible_version: 1.4
+  categories: []
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+
+dependencies:
+- java
+- pip

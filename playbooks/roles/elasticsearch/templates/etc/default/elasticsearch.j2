@@ -1,0 +1,6 @@
+# {{ ansible_managed }}
+{% if elastic_start_options %}
+{% for key, value in elastic_start_options|dictsort(by="key") %}
+{{key}}={{value}}
+{% endfor %}
+{% endif %}

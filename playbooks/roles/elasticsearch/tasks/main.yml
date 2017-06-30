@@ -1,0 +1,11 @@
+---
+
+- include: install.yml
+
+- include: configure.yml
+
+- include: plugins.yml
+  tags:
+  - skip_on_check
+
+- include: curator.yml

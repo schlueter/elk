@@ -1,0 +1,27 @@
+---
+- name: Add Elastic APT key
+  apt_key: data="{{ elasticsearch_key }}"
+
+- name: Add Elasticsearch repository
+  apt_repository:
+    repo="{{ item }}"
+  with_items:
+  - "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main"
+  - "deb http://packages.elastic.co/curator/3/debian stable main"
+
+- name: Install packages
+  apt:
+    name={{ item }}
+    state=latest
+    update_cache=yes
+    cache_valid_time=1800
+    install_recommends=no
+  with_items:
+  - elasticsearch
+  - python-elasticsearch-curator
+
+- name: Ensure elasticsearch is running
+  service:
+    name=elasticsearch
+    state=started
+    enabled=yes
