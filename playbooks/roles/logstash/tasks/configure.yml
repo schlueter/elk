@@ -1,0 +1,66 @@
+---
+- name: Configure Beats input
+  template:
+    src=etc/logstash/conf.d/02-filebeat-input.conf.j2
+    dest=/etc/logstash/conf.d/02-filebeat-input.conf
+    owner=root
+    mode=644
+  notify: restart logstash
+
+- name: Configure Heartbeat input
+  copy:
+    src=etc/logstash/conf.d/05-heartbeat.conf
+    dest=/etc/logstash/conf.d/05-heartbeat.conf
+    owner=root
+    mode=0644
+  notify: restart logstash
+
+- name: Configure Elastic output
+  template:
+    src=etc/logstash/conf.d/30-elasticsearch-output.conf.j2
+    dest=/etc/logstash/conf.d/30-elasticsearch-output.conf
+    owner=root
+    mode=644
+  notify: restart logstash
+
+- name: Configure syslog filter
+  template:
+    src=etc/logstash/conf.d/10-syslog.conf.j2
+    dest=/etc/logstash/conf.d/10-syslog.conf
+    owner=root
+    mode=0644
+  notify: restart logstash
+
+- name: Copy nginx filter
+  copy:
+    src=etc/logstash/conf.d/20-nginx.conf
+    dest=/etc/logstash/conf.d/20-nginx.conf
+    owner=root
+    mode=0644
+
+- name: Create ssl directory
+  file:
+    state=directory
+    path=/etc/logstash/ssl
+    owner=logstash
+    group=logstash
+    mode=0700
+
+- name: Copy ssl cert/key
+  copy:
+    src=etc/logstash/ssl/{{ item }}
+    dest=/etc/logstash/ssl/{{ item }}
+    owner=logstash
+    group=logstash
+    mode=600
+  with_items:
+  - logstash.crt
+  - logstash.key
+
+- name: Configure start options
+  template:
+    src=etc/default/logstash.j2
+    dest=/etc/default/logstash
+    owner=root
+    mode=644
+  notify: restart logstash

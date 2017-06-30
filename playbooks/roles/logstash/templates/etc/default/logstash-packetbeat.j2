@@ -1,0 +1,6 @@
+# {{ ansible_managed }}
+{% if logstash_packetbeat_start_options %}
+{% for key, value in logstash_packetbeat_start_options|dictsort(by="key") %}
+{{key}}={{value}}
+{% endfor %}
+{% endif %}

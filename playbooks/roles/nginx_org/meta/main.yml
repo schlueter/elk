@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Hunter Modes
+  description: Install nginx.org
+  company: Refinery29
+  license: MIT
+  min_ansible_version: 1.4
+  categories: []
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+dependencies: []
+

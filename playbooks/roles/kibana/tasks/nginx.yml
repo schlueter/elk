@@ -1,0 +1,16 @@
+---
+- name: Copy nginx kibana vhost
+  template:
+    src=etc/nginx/sites-available/kibana.conf.j2
+    dest=/etc/nginx/sites-available/kibana.conf
+    owner=root
+    group=root
+    mode=0644
+  notify: reload nginx
+
+- name: Activate nginx vhost
+  file:
+    src=/etc/nginx/sites-available/kibana.conf
+    dest=/etc/nginx/sites-enabled/kibana.conf
+    state=link
+  notify: reload nginx

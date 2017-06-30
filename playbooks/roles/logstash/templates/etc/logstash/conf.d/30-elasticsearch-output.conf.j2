@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+#
+output {
+    elasticsearch {
+{% if inventory_hostname in groups.elastic|default([]) %}
+      hosts => ["localhost:9200"]
+{% else %}
+      hosts => ["{{ logstash_elastichost }}"]
+{% endif %}
+      index => "logstash-%{+YYYY.MM.dd}"
+    }
+}

@@ -1,0 +1,5 @@
+{% for item in all_users if "dev" in item.groups %}
+{% if item.htpasswd %}
+{{ item.name }}:{{ item.htpasswd }}
+{% endif %}
+{% endfor %}

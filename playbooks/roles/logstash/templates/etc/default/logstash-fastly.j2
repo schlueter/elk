@@ -1,0 +1,6 @@
+# {{ ansible_managed }}
+{% if logstash_fastly_start_options %}
+{% for key, value in logstash_fastly_start_options|dictsort(by="key") %}
+{{key}}={{value}}
+{% endfor %}
+{% endif %}

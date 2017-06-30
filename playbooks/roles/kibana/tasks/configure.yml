@@ -1,0 +1,8 @@
+---
+- name: Configure bindip
+  template:
+    src=opt/kibana/config/kibana.yml.j2
+    dest=/opt/kibana/config/kibana.yml
+    owner=root
+    mode=644
+  notify: restart kibana

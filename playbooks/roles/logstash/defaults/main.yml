@@ -1,0 +1,9 @@
+---
+logstash_version: '2.3'
+logstash_ssl_cert: /etc/logstash/ssl/logstash.crt
+logstash_ssl_key: /etc/logstash/ssl/logstash.key
+logstash_elastichost: "service-elastic:9200"
+logstash_logdirs: "/srv/logs/*/syslog"
+logstash_start_options:
+  LS_HEAP_SIZE: '2g'
+  KILL_ON_STOP_TIMEOUT: 1

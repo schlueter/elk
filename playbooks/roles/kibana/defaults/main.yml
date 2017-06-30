@@ -1,0 +1,8 @@
+---
+kibana_version: '4.5'
+
+kibana_user: kibana
+kibana_bindip: localhost
+
+kibana_elastic_host: service-elastic
+kibana_elastic_port: 9200

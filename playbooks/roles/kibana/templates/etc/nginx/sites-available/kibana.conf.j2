@@ -1,0 +1,37 @@
+server {
+  listen 80;
+  server_name kibana ~kibana*.*.rf29.net;
+  return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443;
+
+    ssl on;
+    ssl_certificate {{ cert_dir }}/{{ cert_chain_file }};
+    ssl_certificate_key {{ cert_dir }}/{{ cert_key_file }};
+
+    server_name kibana ~kibana*.*.rf29.net;
+
+  location / {
+    auth_basic "Kibana";
+    auth_basic_user_file /opt/kibana/config/kibana-pwds;
+    proxy_set_header        Host $host;
+    proxy_redirect          http:// https://;
+    proxy_pass              http://localhost:5601;
+    proxy_read_timeout      600;
+  }
+
+  location /auth {
+    internal;
+    proxy_pass http://localhost:4180;
+  }
+
+  location /es {
+    auth_basic "Kibana";
+    auth_basic_user_file /opt/kibana/config/kibana-pwds;
+    proxy_set_header        Host $host;
+    proxy_redirect          http:// https://;
+    proxy_pass              http://localhost:9200;
+  }
+}

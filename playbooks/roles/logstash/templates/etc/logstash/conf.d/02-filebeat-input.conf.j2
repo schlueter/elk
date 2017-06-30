@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+#
+input {
+  beats {
+    port => 5044
+    type => "logs"
+    ssl => true
+    ssl_certificate => "{{ logstash_ssl_cert }}"
+    ssl_key => "{{ logstash_ssl_key }}"
+  }
+}

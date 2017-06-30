@@ -1,0 +1,7 @@
+---
+
+- include: kibana.yml
+- include: configure.yml
+- include: ssl.yml
+- include: nginx.yml
+- include: backup.yml

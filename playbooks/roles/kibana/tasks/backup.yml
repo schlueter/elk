@@ -1,0 +1,17 @@
+---
+- name: Install kibana-backup packages
+  npm:
+   name={{ item }}
+   global=yes
+  with_items:
+  - kibana4-backup
+
+- name: Install kibana-backup crontab
+  cron:
+    cron_file=kibana
+    minute=35
+    hour=05
+    job="/usr/bin/kibana4-backup -s http://{{ kb_elastic_host }}:{{ kb_elastic_port }}
+         -r {{ kb_backup_repo }} -d {{ kb_backup_dir }} -e {{ kibana_backup_name }}"
+    user="kibana"
+    name="kibana"

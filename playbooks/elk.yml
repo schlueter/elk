@@ -1,0 +1,22 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: apt-get update
+      raw: apt-get update -qq
+    - name: Install python 2.7
+      raw: apt-get install -qq python-minimal
+
+- hosts: elk
+  gather_facts: yes
+  pre_tasks:
+    - name: install some packages
+      apt: name={{ item }} update_cache=yes cache_valid_time=1800
+      with_items:
+        - elasticsearch
+        - nginx
+        - apt-transport-https
+
+  roles:
+    - logstash
+    - kibana

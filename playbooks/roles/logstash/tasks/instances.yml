@@ -1,0 +1,45 @@
+---
+- name: Copy init script for additional instances
+  command: >
+    cp /etc/init.d/logstash /etc/init.d/logstash-{{ item }}
+  with_items: "{{ logstash_instances }}"
+
+- name: Set name of additional instances
+  lineinfile:
+    dest=/etc/init.d/logstash-{{ item }}
+    regexp="^name=logstash"
+    line="name=logstash-{{ item }}"
+  with_items: "{{ logstash_instances }}"
+
+- name: Copy defaults file for additional instances
+  template:
+    src=etc/default/logstash-{{ item }}.j2
+    dest=/etc/default/logstash-{{ item }}
+    owner=root
+    mode=0644
+  with_items: "{{ logstash_instances }}"
+
+- name: Create config directory for additional instances
+  file:
+    state=directory
+    path="/etc/logstash/{{ item }}-conf.d"
+    owner=root
+    group=adm
+    mode=0755
+  with_items: "{{ logstash_instances }}"
+
+- name: Copy config for additional instances
+  template:
+    src=etc/logstash/{{ item }}-conf.d/{{ item }}.conf
+    dest=/etc/logstash/{{ item }}-conf.d/{{ item }}.conf
+    owner=root
+    group=adm
+    mode=0644
+  with_items: "{{ logstash_instances }}"
+
+- name: Enable additional instances
+  service:
+    name=logstash-{{ item }}
+    state=restarted
+    enabled=yes
+  with_items: "{{ logstash_instances }}"

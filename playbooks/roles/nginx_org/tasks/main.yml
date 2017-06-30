@@ -1,0 +1,68 @@
+---
+- name: Add nginx.org APT key
+  apt_key: data="{{ nginx_org_key }}"
+  tags:
+  - nginx_org
+
+- name: Add nginx.org search repository
+  apt_repository:
+    repo="{{ item }}"
+  with_items:
+  - "deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx"
+  tags:
+  - nginx_org
+
+- name: Install NGINX
+  apt:
+    name={{ item }}
+    state=latest
+    update_cache=yes
+    cache_valid_time=1800
+    install_recommends=no
+  with_items:
+  - nginx
+  tags:
+  - nginx_org
+
+- name: Copy ubuntu sites-enabled compat config
+  copy:
+    src=etc/nginx/conf.d/compat.conf
+    dest=/etc/nginx/conf.d/compat.conf
+    owner=root
+    group=root
+    mode=0644
+  tags:
+  - nginx_org
+
+- name: Copy default monitoring config
+  copy:
+    src=etc/nginx/conf.d/default.conf
+    dest=/etc/nginx/conf.d/default.conf
+    owner=root
+    group=root
+    mode=0644
+  tags:
+  - nginx_org
+
+- name: Copy nginx logrotate config
+  copy:
+    src=etc/logrotate.d/nginx
+    dest=/etc/logrotate.d/nginx
+    owner=root
+    group=root
+    mode=0644
+  tags:
+  - nginx_org
+
+- name: Ensure all nginx sites directories exist
+  file:
+    path=/etc/nginx/sites-{{ item }}
+    state=directory
+    owner=root
+    group=root
+    mode=0755
+  with_items:
+  - enabled
+  - available
+  tags:
+  - nginx_org

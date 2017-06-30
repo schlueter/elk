@@ -1,0 +1,46 @@
+# {{ ansible_managed }}
+#
+input {
+  stdin {
+    type => "edgecast"
+    codec => plain { charset => "ISO-8859-1" }
+  }
+}
+
+filter {
+  if [type] == "edgecast" {
+    grok {
+      match => [
+        "message", "%{INT:epoch} %{NUMBER:request_time:float} %{IPORHOST:client_ip} %{NUMBER:filesize:float} %{IPORHOST:edgecast_ip} %{INT:edgecast_port} %{DATA:cache_status}/%{INT:status} %{NUMBER:sc_bytes:float} %{WORD:method} %{DATA:request} - %{NUMBER:rs_duration:float} %{NUMBER:rs_bytes:float} %{QS:client_referer} %{QS:http_user_agent} %{INT:customer_id} %{QS:http_referer}",
+        "message", "%{INT:epoch} %{NUMBER:request_time:float} %{IPORHOST:client_ip} - %{IPORHOST:edgecast_ip} %{INT:edgecast_port} %{DATA:cache_status}/%{INT:status} %{NUMBER:sc_bytes:float} %{WORD:method} %{DATA:request} - %{NUMBER:rs_duration:float} %{NUMBER:rs_bytes:float} %{QS:client_referer} %{QS:http_user_agent} %{INT:customer_id} %{QS:http_referer}",
+        "message", "%{INT:epoch} %{NUMBER:request_time:float} %{IPORHOST:client_ip} %{NUMBER:filesize:float} %{IPORHOST:edgecast_ip} %{INT:edgecast_port} %{DATA:cache_status}/%{INT:status} %{NUMBER:sc_bytes:float} %{WORD:method} %{DATA:request} \"-\" %{QS:http_user_agent} %{INT:customer_id} %{QS:http_referer}",
+        "message", "%{INT:epoch} %{NUMBER:request_time:float} %{IPORHOST:client_ip} - %{IPORHOST:edgecast_ip} %{INT:edgecast_port} %{DATA:cache_status}/%{INT:status} %{NUMBER:sc_bytes:float} %{WORD:method} %{DATA:request} \"-\" %{QS:http_user_agent} %{INT:customer_id} %{QS:http_referer}"
+      ]
+    }
+    date {
+    match => [ "epoch" , "UNIX" ]
+    }
+  }
+  if "_grokparsefailure" in [tags] {
+    drop { }
+  }
+  geoip {
+    source => "client_ip"
+  }
+  useragent {
+    source => "http_user_agent"
+  }
+  grok {
+    match => [ "request", "https?://%{IPORHOST:vhost}%{GREEDYDATA:request_path}" ]
+  }
+  mutate {
+    lowercase => [ "vhost" ]
+  }
+}
+
+output {
+    elasticsearch {
+      hosts => ["{{ logstash_elastichost }}"]
+      index => "logstash-ec-%{+YYYY.MM.dd}"
+    }
+}

@@ -1,0 +1,24 @@
+---
+- name: Add node package key.
+  apt_key: data="{{ node_key }}"
+
+- name: Add node repo.
+  apt_repository: >
+    repo='deb https://deb.nodesource.com/node_6.x trusty main'
+
+- name: Install node
+  apt:
+    pkg={{ item }}
+    state=latest
+    install_recommends=no
+    cache_valid_time=1800
+    update_cache=yes
+  with_items:
+  - nodejs
+  - g++
+
+- name: Link nodejs to node
+  file:
+    src=/usr/bin/nodejs
+    dest=/usr/bin/node
+    state=link
