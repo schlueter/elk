@@ -12,5 +12,4 @@ galaxy_info:
     - all
 
 dependencies:
-- java
-- pip
+  - elastic-repo

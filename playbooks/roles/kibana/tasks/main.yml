@@ -1,7 +1,7 @@
 ---
 
-- include: kibana.yml
+- include: install.yml
 - include: configure.yml
-- include: ssl.yml
-- include: nginx.yml
-- include: backup.yml
+#- include: ssl.yml
+#- include: nginx.yml
+#- include: backup.yml

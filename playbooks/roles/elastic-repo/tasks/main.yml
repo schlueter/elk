@@ -1,0 +1,10 @@
+---
+- name: Add Elastic APT key
+  apt_key: data="{{ elasticsearch_key }}"
+
+- name: Add Elasticsearch repository
+  copy:
+    dest=/etc/apt/sources.list.d/elastic-5.x.list
+    content='deb https://artifacts.elastic.co/packages/5.x/apt stable main'
+
+

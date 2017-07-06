@@ -1,14 +1,4 @@
 ---
-- name: Add Elastic APT key
-  apt_key: data="{{ elasticsearch_key }}"
-
-- name: Add Elasticsearch repository
-  apt_repository:
-    repo="{{ item }}"
-  with_items:
-  - "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main"
-  - "deb http://packages.elastic.co/curator/3/debian stable main"
-
 - name: Install packages
   apt:
     name={{ item }}
@@ -17,11 +7,19 @@
     cache_valid_time=1800
     install_recommends=no
   with_items:
-  - elasticsearch
-  - python-elasticsearch-curator
+    - elasticsearch
 
 - name: Ensure elasticsearch is running
   service:
     name=elasticsearch
     state=started
     enabled=yes
+  when: ansible_service_mgr == 'service'
+
+- name: Activate elasticsearch systemd service
+  systemd:
+    name=elasticsearch
+    daemon_reload=yes
+    enabled=yes
+    state=started
+  when: ansible_service_mgr == 'systemd'

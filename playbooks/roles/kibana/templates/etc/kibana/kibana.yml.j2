@@ -4,7 +4,7 @@
 # server.port: 5601
 
 # The host to bind the server to.
-server.host: "{{ kibana_bindip }}" 
+server.host: "{{ kibana_bindip }}"
 
 # A value to use as a XSRF token. This token is sent back to the server on each request
 # and required if you want to execute requests from other clients (like curl).
@@ -15,7 +15,7 @@ server.host: "{{ kibana_bindip }}"
 # server.basePath: ""
 
 # The Elasticsearch instance to use for all your queries.
-elasticsearch.url: "http://{{ kb_elastic_host }}:{{ kb_elastic_port }}"
+elasticsearch.url: "http://{{ kibana_elastic_host }}:{{ kibana_elastic_port }}"
 
 # preserve_elasticsearch_host true will send the hostname specified in `elasticsearch`. If you set it to false,
 # then the host you use to connect to *this* Kibana instance will be sent.

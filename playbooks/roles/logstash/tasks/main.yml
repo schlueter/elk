@@ -4,4 +4,3 @@
 - include: configure.yml
 - include: instances.yml
   when: logstash_instances is defined
-  tags: skip_on_check

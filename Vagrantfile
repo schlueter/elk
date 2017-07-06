@@ -9,7 +9,8 @@ Vagrant.configure('2') do |config|
     :ansible,
     playbook: 'playbooks/elk.yml',
     groups: {elk: %w(default)},
-    raw_arguments: %w(--diff -vv --become),
+    verbose: '-vvv',
+    raw_arguments: %w(--diff --become),
     extra_vars: ansible_extra_vars
   )
 end

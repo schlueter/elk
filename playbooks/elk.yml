@@ -9,14 +9,17 @@
 
 - hosts: elk
   gather_facts: yes
+  vars:
+    pre_apt_packages:
+      - nginx
+      - apt-transport-https
+      - python-pip
+      - nginx
   pre_tasks:
     - name: install some packages
       apt: name={{ item }} update_cache=yes cache_valid_time=1800
-      with_items:
-        - elasticsearch
-        - nginx
-        - apt-transport-https
-
+      with_items: "{{ pre_apt_packages }}"
   roles:
+    - elasticsearch
     - logstash
     - kibana
